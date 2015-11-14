@@ -47,5 +47,12 @@ echo Create Dir - %DOMAINS_DIR%\localhost
 echo Create Dir - %DOMAINS_DIR%\localhost\public_html
 echo Create Dir - %DOMAINS_DIR%\localhost\logs
 
+mkdir %DOMAINS_DIR%\phpmyadmin
+mkdir %DOMAINS_DIR%\phpmyadmin\public_html
+mkdir %DOMAINS_DIR%\phpmyadmin\logs
+echo Create Dir - %DOMAINS_DIR%\phpmyadmin
+echo Create Dir - %DOMAINS_DIR%\phpmyadmin\public_html
+echo Create Dir - %DOMAINS_DIR%\phpmyadmin\logs
+
 pause
 exit
