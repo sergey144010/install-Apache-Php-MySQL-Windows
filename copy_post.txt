@@ -1,0 +1,185 @@
+Доброго времени суток, уважаемые читатели. В этой статье я хочу поделиться с вами личным опытом настройки Apache под Windows 8.1 x64.
+Было время – установил я себе Windows 8.1 и думаю, раз уж пошло на то, «дай ка» Я и Apache подниму! И как обычно меня он очень порадовал (табличка: «Сарказм»). Пришлось повозиться почти целую ночь, чтобы поднять сервер. И мне это удалось! После этого я решил тем самым написать небольшую статью по настройке Apache, чтобы другой человек не тратил на это столько же времени, сколько Я.
+После нескольких минут раздумий, решил написать пошаговую инструкцию, которая будет состоять из нескольких разделов:
+
+    Подготовка папок
+    Настройка Apache
+    Настройка PHP
+    Настройка MySQL
+    Устанавливаем phpMyAdmin
+
+
+Ну что ж, приступим.
+
+Подготовка папок
+
+Я очень не люблю, чтобы у меня все валялось, где попало, так что для начала создадим папки, где у нас будут располагаться программы и сайты.
+Создадим на диске «C:\» (или где вам удобней) папку «Server»:
+C:\Server\
+В ней создадим 2 папки:
+C:\Server\web – это папка в которой у нас будут лежать программы
+C:\Server\domains – а в этой папке будут лежать наши сайты
+Итак, в папке \web\ мы создадим 3 папки для apache, php, mysql:
+C:\Server\web\apache\
+C:\Server\web\php\
+C:\Server\web\mysql\
+Далее перейдем в папку domains и создадим папку \localhost\
+C:\Server\domains\localhost\
+Внутри папки у нас будет 2 подпапки: public_html – для файлов сайта; logs – для текстовых файлов, в которых записывается «кто» получал доступ к сайту и какие ошибки в работе сайта появлялись.
+C:\Server\domains\localhost\public_html\
+C:\Server\domains\localhost\logs\
+На этом структура папок заканчивается, переходим к настройке Apache.
+
+Настройка Apache
+
+Для установки Apache нам понадобиться сам Apache (Кэп). Так как у нас Windows 8.1 x64, то устанавливать будем Apache x64.
+Для скачивания перейдем по ссылке:
+www.apachelounge.com/download/win64/
+и скачиваем «httpd-2.4.6-win64.zip». Так же нам понадобиться для нормальной работы «Распространяемый пакет Microsoft Visual C++ 2010 (x64)». Для этого скачаем его по этой ссылке:
+www.microsoft.com/ru-ru/download/details.aspx?id=14632
+и устанавливаем.
+После того как скачался наш архив с Apache, откроем его. Открыв архив, мы увидим папку «Apache24», зайдем в нее. Появиться множество папок и файлов программы, все распаковываем в заготовленную ранее папку:
+C:\Server\web\apache\
+Должно получиться так:
+C:\Server\web\apache\bin\
+C:\Server\web\apache\cgi-bin\
+C:\Server\web\apache\conf\
+C:\Server\web\apache\error\
+C:\Server\web\apache\htdocs\
+C:\Server\web\apache\icons\
+C:\Server\web\apache\include\
+C:\Server\web\apache\lib\
+C:\Server\web\apache\logs\
+C:\Server\web\apache\manual\
+C:\Server\web\apache\modules\
+Папки, такие как \cgi-bin\, \htdocs\, \icons\ и \manual\ нам не нужны – можете их удалить.
+Перейдем в папку:
+C:\Server\web\apache\conf\
+И откроем файл конфигурации Apache – «httpd.conf» любым текстовым редактором. В этом файле каждая строка содержит директивы для настройки Apache, а строки, начинающиеся со знака # (решетка) – комментарий и пояснение. Приступим к настройке:
+Файл конфигурации Apache
+
+На этом заканчивается настройка httpd.conf.
+В конфигурационном файле Apache httpd.conf были подключены дополнительные конфиги:
+Include conf/extra/httpd-mpm.conf
+Include conf/extra/httpd-autoindex.conf
+Include conf/extra/httpd-vhosts.conf
+Include conf/extra/httpd-manual.conf
+Include conf/extra/httpd-default.conf
+Откроем файл «C:\Server\web\apache\conf\extra\httpd-mpm.conf» и быстро пробежимся по нему.
+# указываем, где у нас будет храниться pid-файл:
+<IfModule !mpm_netware_module>
+PidFile “C:/Server/web/apache/logs/httpd.pid”
+</IfModule>
+Остальные параметры оставляем без изменений. Откроем файл «httpd-autoindex.conf», изменим там только строки с путем:
+Alias /icons/ "c:/Server/web/apache/icons/"
+<Directory "C:/Server/web/apache/icons">
+Options Indexes MultiViews
+AllowOverride None
+Require all granted
+</Directory>
+Далее переходим к файлу «httpd-vhosts.conf», удаляем его содержимое. После того, как мы это сделали, начинаем наполнять его заново:
+Файл хостов Apache
+
+На этом редактирование файла заканчивается. Далее в оставшихся файлах правим только пути:
+Файл «httpd-manual.conf»:
+AliasMatch ^/manual(?:/(?:da|de|en|es|fr|ja|ko|pt-br|ru|tr|zh-cn))?(/.*)?$ "C:/Server/web/apache/manual$1"
+<Directory "C:/Server/web/apache/manual">
+В файле «httpd-default.conf» никаких изменений не производиться. На этом настройка конфигурации Apache завершается.
+
+Настройка PHP
+
+Раз у нас Windows 8.1 x64 и Apache x64 установлен и настроен, то и php должно быть x64.
+Идем на сайт:
+www.anindya.com/tag/php/
+и скачиваем архив php последней версии. Нам нужен php как модуль, т.е. для этого скачиваем Thread Safe. После того как архив скачался, открываем его и переносим содержимое в папку «C:\Server\web\php\». Создадим две пустые папки «tmp» и «upload». Далее в этой папке ищем файл «php.ini-development» и переименовываем его в «php.ini». Открываем файл в текстовом редакторе и изменяем директивы (комментирования строк в файле начинается с точки с запятой).
+Настройка php.ini
+
+На этом настройка php заканчивается.
+
+Настройка MySQL
+
+Ставим MySQL x64 как сокет под windows. Скачиваем архив с последней версией MySQL x64:
+dev.mysql.com/downloads/mysql/
+В низу страницы находим Windows (x86, 64-bit), ZIP Archive и жмем на кнопку «Download». Вам перекинет на страницу регистрации на сайте. Нажимаем внизу страницы «No thanks, just start my download», запуститься скачивание архива MySQL. После того как скачался архив откроем его и перенесем все содержимое папки в «C:\Server\web\mysql\»
+Теперь открываем файл настроек MySQL – «C:\Server\web\mysql\my-default.ini». Удаляем все его содержимое и вносим туда свои данные.
+[client]
+port=3306
+host=127.0.0.1
+[mysqld]
+port=3306
+bind-address=127.0.0.1
+enable-named-pipe
+basedir="C:/Server/web/mysql/"
+datadir="C:/Server/web/mysql/data/"
+sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
+Вот и всё. В конфигурационном файле мы указали, что скрипты могут обращаться к серверу и по локальному IP, и по сокет-соединению.
+Осталось дело за малым. Добавим в системную переменную «PATH» пути к Apache и MySQL, для этого:
+
+    Перетащите курсор мыши в правый нижний угол экрана
+    Щелкните на значке «Поиск» и введите: панель управления
+    Выберите System (Система)-> Advanced (Дополнительные параметры системы)
+    Выберите Environment Variables (Переменные среды), в меню System Variables (Системные переменные), найдите переменную PATH и щелкните на ней.
+    Пропишите пути к Apache и MySQL:
+
+
+;C:\Server\web\apache\bin;C:\Server\web\mysql\bin
+Далее установим службы Apache и MySQL. Для этого воспользуемся сочетанием клавиш «Win+X», появиться выпадающее меню в левом нижнем углу. Выберем «Командная строка (администратор)».
+В командной строке вводим, для установки Apache:
+httpd –k install
+для установки MySQL:
+mysqld.exe --install MySQL --defaults-file=”C:\Server\web\mysql\my-default.ini”
+Установим пароль для MySQL-пользователя. Для этого запустим службу MySQL командой:
+NET start MySQL
+После того как служба запустилась, установим пароль:
+mysqladmin –u root password ВашПароль
+В файл «httpd-vhosts.conf» мы прописали два сайта, для того чтобы браузер мог их увидеть, названия сайтов нужно добавить в файла «hosts». Перейдем в папку:
+C:\Windows\System32\Drivers\etc\
+откроем файл «hosts» любым текстовым редактором (запустить от имени администратора) и в конец файла добавим:
+127.0.0.1 localhost
+127.0.0.1 phpmyadmin
+Сохраняем файл.
+Для удобства запуска и остановки служб Apache и MySQL создадим файлы start-server.bat и stop-server.bat.
+Для этого перейдем в папку «C:\Server\» и создадим два этих файла.
+Содержание «start-server.bat»:
+@echo off
+NET start Apache2.4
+NET start MySQL
+Содержание «stop-server.bat»:
+@echo off
+NET stop Apache2.4
+NET stop MySQL
+Настройка Apache, PHP и MySQL на этом закончена. Для того чтобы протестировать сервер, давайте в папке «C:\Server\domains\localhost\public_html» создадим файл «index.php» с содержимым:
+
+<?php
+    echo phpinfo();
+
+
+Далее запустим наш сервер, для этого запустите «start-server.bat» от имени администратора. После того как сервер запустился, откройте браузер и введите в адресной строке «localhost».
+Должна отобразиться страница с информацией о PHP.
+
+Устанавливаем PhpMyAdmin
+
+Скачиваем последнюю версию PhpMyAdmin отсюда:
+www.phpmyadmin.net/home_page/index.php
+Открываем скаченный архив и переносим содержимое его папки в папку для нашего домена «C:\Server\domains\phpmyadmin\public_html\».
+Находим файл «config.sample.inc.php», делаем его копию и переименовываем копию в «config.inc.php». Открываем файл текстовым редактором и меняем данные:
+
+<?php
+// Желательно сменить секретный код
+$cfg['blowfish_secret'] = 'a8b7c6d';
+$i = 0;
+$i++;
+$cfg['Servers'][$i]['auth_type'] = 'cookie';
+$cfg['Servers'][$i]['host'] = 'localhost';
+$cfg['Servers'][$i]['connect_type'] = 'tcp';
+$cfg['Servers'][$i]['compress'] = false;
+$cfg['Servers'][$i]['extension'] = 'mysqli';
+$cfg['Servers'][$i]['AllowNoPassword'] = false;
+$cfg['UploadDir'] = '';
+$cfg['SaveDir'] = '';
+?>
+
+
+Сохраняем и закрываем файл. Открываем в браузере сайт «http://phpmyadmin» и наслаждаемся.
+
+Статья получилась объемная, но надеюсь полезная. 
