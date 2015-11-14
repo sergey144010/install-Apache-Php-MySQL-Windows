@@ -27,6 +27,7 @@ http://windows.php.net/download/
 
 Устанавливаем всё по следующему подобию
 http://habrahabr.ru/post/203012/
+Копия поста в файле copy_post.txt
 
 ...
 Установка Apache как сервиса с заданным именем
