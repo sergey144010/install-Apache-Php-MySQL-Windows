@@ -35,9 +35,13 @@ echo Create Dir - %DOMAINS_DIR%
 
 mkdir %WEB_DIR%\apache
 mkdir %WEB_DIR%\php
+mkdir %WEB_DIR%\php\tmp
+mkdir %WEB_DIR%\php\upload
 mkdir %WEB_DIR%\mysql
 echo Create Dir - %WEB_DIR%\apache
 echo Create Dir - %WEB_DIR%\php
+echo Create Dir - %WEB_DIR%\php\tmp
+echo Create Dir - %WEB_DIR%\php\upload
 echo Create Dir - %WEB_DIR%\mysql
 
 mkdir %DOMAINS_DIR%\localhost
