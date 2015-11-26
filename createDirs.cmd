@@ -9,8 +9,8 @@ goto comment1
 -----------------
 :comment1
 
-set SERVER_DIR=c:\serverTEST
-
+set SERVER_DIR=c:\server
+:exist_server_dir
 if exist "%SERVER_DIR%" (
     goto end
 ) else (
@@ -19,7 +19,9 @@ if exist "%SERVER_DIR%" (
 
 :end
 echo Already exists %SERVER_DIR%. Set the other value variable SERVER_DIR.
-pause
+echo Example SERVER_DIR 1. c:\server (or simple) 2. server
+set /p SERVER_DIR="SERVER_DIR: "
+goto exist_server_dir
 exit
 
 :begin
