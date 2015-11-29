@@ -1,18 +1,9 @@
 @echo off
 set INSTALL_DIR=%CD%
-cd c:\
-
-goto comment1
------------------
-:: Внимательно Устанавливаем SERVER_DIR
-:: Правильно - SERVER_DIR=c:\serverTEST
-:: Не правильно - SERVER_DIR = c:\serverTEST
-::
-:: SET PATH=C:\NewProgs;%path% изменит текущее значение PATH, добавив каталог C:\NewProgs в начало списка.
------------------
-:comment1
-
+:: Директория сервера по умолчанию
 set SERVER_DIR=c:\server
+
+cd c:\
 :exist_server_dir
 if exist "%SERVER_DIR%" (
     goto end
@@ -111,7 +102,13 @@ goto next12
 :copy_apache_conf
 choice /T 10 /C YN /D y
 if ERRORLEVEL 2 ( goto next12 )
-if ERRORLEVEL 1 ( xcopy "%INSTALL_DIR%\conf\httpd.conf" "%APACHE_TO_DIR%\conf" /Y )
+if ERRORLEVEL 1 (
+	xcopy "%INSTALL_DIR%\conf\httpd.conf" "%APACHE_TO_DIR%\conf" /Y
+	xcopy "%INSTALL_DIR%\conf\extra\httpd-autoindex.conf" "%APACHE_TO_DIR%\conf\extra" /Y
+	xcopy "%INSTALL_DIR%\conf\extra\httpd-manual.conf" "%APACHE_TO_DIR%\conf\extra" /Y
+	xcopy "%INSTALL_DIR%\conf\extra\httpd-mpm.conf" "%APACHE_TO_DIR%\conf\extra" /Y
+	xcopy "%INSTALL_DIR%\conf\extra\httpd-vhosts.conf" "%APACHE_TO_DIR%\conf\extra" /Y
+)
 :next12
 :next1
 
@@ -167,5 +164,6 @@ if ERRORLEVEL 1 ( xcopy "%INSTALL_DIR%\conf\php.ini" "%PHP_TO_DIR%")
 
 
 :next_step_2
+echo Install is finished
 pause
 exit
