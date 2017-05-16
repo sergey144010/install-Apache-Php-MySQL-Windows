@@ -33,6 +33,20 @@ http://habrahabr.ru/post/203012/
 Установка Apache как сервиса с заданным именем
 C:/Server/web/apache/bin/httpd.exe -k install -n Apache2.4.17VC14
 
+PHP
+
+Что бы заработал cURL, например в php 7.1.5:
+Берём архив из http://windows.php.net/download#php-7.1
+VC14 x64 Thread Safe (2017-May-09 23:03:05)
+Распаковываем и кладём в
+C:\server\web\php
+Правим конфиг
+Берём файлы
+ssleay32.dll
+libeay32.dll
+и кладём их в
+C:\server\web\apache\bin
+и cURL работает.
 
 Ошибки:
 
